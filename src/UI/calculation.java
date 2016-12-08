@@ -15,7 +15,10 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import javax.swing.JTextField;
 
 /**
@@ -123,11 +126,23 @@ public class calculation {
         return sb.toString();
     }
 
-    public void readFromFile(String file) throws IOException {
+    public void readFromFile(String file,String h, JTextField pwd) throws IOException, NoSuchAlgorithmException {
         try {
             FileInputStream fileIn = new FileInputStream(file);
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            hashTable = (HashMap) in.readObject();//write into hashmap
+            hashTable = (HashMap) in.readObject();
+            Set set = hashTable.entrySet();
+            Iterator iterator = set.iterator();
+
+            while (iterator.hasNext()) {
+                Map.Entry mentry = (Map.Entry) iterator.next();
+                endChain = (String) mentry.getKey();
+                startChain = (String) mentry.getValue();
+                hashTable.put(endChain,startChain);
+                
+                readTable( h,  pwd);
+                //System.out.println("s: "+startChain+"e: "+endChain);
+            }
             in.close();
             fileIn.close();
         } catch (ClassNotFoundException c) {
@@ -135,9 +150,10 @@ public class calculation {
         }
     }
 
-    public void readTable(String h, JTextField pwd) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    public void readTable(String h, JTextField pwd) throws NoSuchAlgorithmException, UnsupportedEncodingException, IOException {
         String endPoint = "";
         String hashed = "";
+        //System.out.println("s: "+startChain+"e: "+endChain);
         int reduces = reduce(h);//reduce the hash
         endPoint = intToPwd(reduces);//string generated based on the given hash
 

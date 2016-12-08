@@ -263,23 +263,26 @@ public class mainMenu extends javax.swing.JFrame {
             txtHashTable.requestFocus();
         } else {
             if (txtInputHash.length() == 40) {
+
                 pwLength = Integer.parseInt(txtPwLength.getText());
                 charset = txtCharSet.getText();
                 chainTable = Integer.parseInt(txtChainTable.getText());
                 chainLength = Integer.parseInt(txtChainLength.getText());
+                rmDuplicateChar = removeDuplicates(charset);//remove duplicate number 
+                //System.out.println(rmDuplicateChar);
                 calculation c = new calculation(rmDuplicateChar, pwLength, chainTable, chainLength);
                 file = txtHashTable.getText();//get File name
                 hash = txtHash.getText();//get Hash
 
                 try {
-                    c.readFromFile(file + ".ser");
-                    c.readTable(hash, txtPassword);
+                    c.readFromFile(file + ".ser", hash, txtPassword);
+                    //c.readTable(hash, txtPassword);
                 } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
                     JOptionPane.showMessageDialog(null, "There's an error on " + ex);
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(null, "Table not Found!");
                 }
-            }else{
+            } else {
                 JOptionPane.showMessageDialog(null, "Incorrect SHA1 Format");
             }
         }
@@ -294,6 +297,9 @@ public class mainMenu extends javax.swing.JFrame {
             visibleA(true);
             visibleB(false);
             setSize(565, 480);
+            rmDuplicateChar = removeDuplicates(charset);//remove duplicate number 
+            System.out.println(rmDuplicateChar);
+            calculation c = new calculation(rmDuplicateChar, pwLength, chainTable, chainLength);
             txtHashTable.requestFocus();
         }
     }//GEN-LAST:event_btnCrackRainbowActionPerformed
